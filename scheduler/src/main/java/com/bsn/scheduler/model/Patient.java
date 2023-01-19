@@ -1,6 +1,7 @@
 package com.bsn.scheduler.model;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.slf4j.Logger;
@@ -11,6 +12,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Transient;
 
 @Entity
@@ -29,26 +31,11 @@ public class Patient {
 	@Embedded
 	private Insurance insurance;
 	
+	@OneToMany
+	List<Appointment> appointments;
+	
 	@ManyToMany(mappedBy = "patients")
 	Set<Doctor> doctors;
-	
-	public void addDoctor(Doctor doctor) {
-		if (doctors == null) {
-			doctors = new HashSet<>();
-			logger.info("doctors list was empty, created new list in: " + this);
-		}
-		doctors.add(doctor);
-		logger.info("Added doctor: " + doctor + " to patient: " + this);	
-	}
-	
-	public void removeDoctor(Doctor doctor) {
-		if (doctors.contains(doctor)) {
-			doctors.remove(doctor);
-			logger.info("Removed Doctor: " + doctor + " form Patient: " + this);
-		} else {
-			logger.info("Doctor: " + doctor + " not present in Patient: " + this);
-		}
-	}
 
 	/**
 	 * 

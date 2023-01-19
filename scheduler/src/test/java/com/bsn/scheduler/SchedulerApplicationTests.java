@@ -1,5 +1,8 @@
 package com.bsn.scheduler;
 
+import java.sql.Timestamp;
+import java.util.Date;
+
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -7,9 +10,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.bsn.scheduler.model.Appointment;
 import com.bsn.scheduler.model.Doctor;
 import com.bsn.scheduler.model.Insurance;
 import com.bsn.scheduler.model.Patient;
+import com.bsn.scheduler.repository.AppointmentRepository;
 import com.bsn.scheduler.repository.DoctorRepository;
 import com.bsn.scheduler.repository.PatientRepository;
 import com.github.javafaker.Faker;
@@ -26,6 +31,9 @@ class SchedulerApplicationTests {
 	
 	@Autowired
 	private DoctorRepository doctorRepository;
+	
+	@Autowired
+	private AppointmentRepository appointmentRepository;
 	
 	@Test
 	void contextLoads() {
@@ -74,4 +82,19 @@ class SchedulerApplicationTests {
 //		patientRepository.save(patient);
 		logger.info("End testDoctorPatientLinking()");
 	}//Done working
+	
+	@Test
+	public void testCreateAppointment() {
+		logger.info("Start testCreateAppointment()");
+		Appointment appointment = new Appointment();
+		appointment.setAppointTime(Timestamp.from(new Date().toInstant()));
+		appointment.setStarted(true);
+		appointment.setEnded(false);
+		appointment.setReason("Some emergency problem");
+		appointment.setDoctor(doctorRepository.findById(102L).get());
+		appointment.setPatient(patientRepository.findById(52L).get());
+		appointmentRepository.save(appointment);
+		logger.info("End testCreateAppointment()");
+	}//Done working
+	
 }
